@@ -24,16 +24,6 @@ public class Application {
     private static final Logger logger = Logger.getLogger(Application.class.getName());
 
     public static void main(String[] args) throws Exception {
-        List<String> programArgs = Lists.newArrayList(args);
-        programArgs.addAll(
-                HerokuUtils.extractDbProperties
-                        .apply(System.getenv("DATABASE_URL"))
-        );
-
-        List<Employee> employees = new ArrayList<>();
-        employees.add(new Employee(1L, "Mr", "John Doe"));
-        employees.add(new Employee(2L, "Mr", "White Snow"));
-
         RatpackServer.start(server -> server
 //            .registry(Guice.registry(bindings ->
 //                    bindings.module(HikariModule.class, config -> {
@@ -49,8 +39,9 @@ public class Application {
                 //j.json(Application.class.getClassLoader().getResource("dbconfig.json")).require("/database", DatabaseConfig.class);
                 .yaml(Application.class.getClassLoader().getResource("dbconfig.yaml"))
                 .yaml(Application.class.getClassLoader().getResource("postgres.yaml"))
-                .sysProps()
-                .args(programArgs.stream().toArray(String[]::new));
+                //.env()
+                .sysProps();
+                //.args(programArgs.stream().toArray(String[]::new));
 
 
                 //.require("/database", HikariConfig.class);
@@ -62,8 +53,9 @@ public class Application {
 //                    .bindInstance(UserService.class, new UserServiceImpl())
 //                    .bind(UserDAO.class, UserDAOImpl.class)
                     .moduleConfig(ApplicationModule.class, bindings.getServerConfig().get("/user", ApplicationModule.Config.class))
-                    .module(HikariModule.class)
-                    .moduleConfig(HikariModule.class, new HikariConfig(bindings.getServerConfig().get("/database", Properties.class)))
+                    //.module(HikariModule.class)
+                    .moduleConfig(HikariModule.class, getHikariConfig())
+                    //.moduleConfig(HikariModule.class, new HikariConfig(bindings.getServerConfig().get("/database", Properties.class)))
 //                    .module(HikariModule.class, config -> {
 //                        config.setDataSourceClassName("org.postgresql.ds.common.BaseDataSource");
 //                        config.addDataSourceProperty("URLx", "jdbc:mysql://localhost:3306/db");
@@ -77,7 +69,7 @@ public class Application {
 //                    ctx.next();
 //                })
                 .get(ctx -> ctx.render("Welcome to Rat pack!!!"))
-                .get("employees", ctx -> ctx.render(Jackson.json(employees)))
+                //.get("employees", ctx -> ctx.render(Jackson.json(employees)))
                 .get("config", ctx -> ctx.render(Jackson.json(ctx.get(DatabaseConfig.class))))
                 .get("foo", ctx -> ctx.render("Foo"))
                 .get("foo/:id", ctx -> ctx.render("Foo " + ctx.getPathTokens().get("id")))
@@ -96,8 +88,23 @@ public class Application {
 
 //    // https://github.com/ratpack/ratpack/issues/1270
 //    private static HikariConfig makeHikariConfig(Properties properties) {
+//        logger.info(String.format("Properties: %s", properties));
 //        return new HikariConfig(properties);
 //    }
+
+    private static HikariConfig getHikariConfig() {
+        String url = System.getProperty("JDBC_DATABASE_URL");
+        if (url == null) {
+            url = System.getenv("JDBC_DATABASE_URL");
+        }
+        if (url == null) {
+            throw new RuntimeException("Environment variable or property JDBC_DATABASE_URL not set");
+        }
+        HikariConfig config = new HikariConfig();
+        config.setJdbcUrl(url);
+        return config;
+    }
+
 
 //    public static HikariConfig getHikariConfig() {
 //        HikariConfig hikariConfig = new HikariConfig();
