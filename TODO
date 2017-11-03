@@ -1,0 +1,11 @@
+- log format
+- config
+- db connection
+  - classname ?
+  https://ratpack.io/manual/current/api/ratpack/hikari/HikariModule.html
+  http://mrhaki.blogspot.de/2015/11/ratpacked-using-postgresql-database.html
+- filter
+- jooq
+  https://danhyun.github.io/2016-jeeconf-rapid-ratpack-java/
+
+- https://github.com/danhyun/modern-java-web/blob/master/src/main/java/App.java
