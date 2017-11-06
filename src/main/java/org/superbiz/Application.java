@@ -2,9 +2,15 @@ package org.superbiz;
 
 import com.google.common.collect.Lists;
 import com.zaxxer.hikari.HikariConfig;
+import org.jooq.DSLContext;
+import org.jooq.Record;
+import org.jooq.Result;
 import org.superbiz.config.ApplicationModule;
+import org.superbiz.config.JooqModule;
 import org.superbiz.service.UserService;
+import org.superbiz.utils.CustomErrorHandler;
 import org.superbiz.utils.HerokuUtils;
+import ratpack.error.ClientErrorHandler;
 import ratpack.guice.Guice;
 import ratpack.hikari.HikariModule;
 import ratpack.jackson.Jackson;
@@ -37,6 +43,7 @@ public class Application {
             .serverConfig(config -> { config
                 //j.json(Paths.get("dbconfig.json")).require("/database", DatabaseConfig.class);
                 //j.json(Application.class.getClassLoader().getResource("dbconfig.json")).require("/database", DatabaseConfig.class);
+                .findBaseDir()
                 .yaml(Application.class.getClassLoader().getResource("dbconfig.yaml"))
                 .yaml(Application.class.getClassLoader().getResource("postgres.yaml"))
                 //.env()
@@ -52,17 +59,11 @@ public class Application {
             .registry(Guice.registry(bindings -> bindings
 //                    .bindInstance(UserService.class, new UserServiceImpl())
 //                    .bind(UserDAO.class, UserDAOImpl.class)
-                    .moduleConfig(ApplicationModule.class, bindings.getServerConfig().get("/user", ApplicationModule.Config.class))
-                    //.module(HikariModule.class)
-                    .moduleConfig(HikariModule.class, getHikariConfig())
-                    //.moduleConfig(HikariModule.class, new HikariConfig(bindings.getServerConfig().get("/database", Properties.class)))
-//                    .module(HikariModule.class, config -> {
-//                        config.setDataSourceClassName("org.postgresql.ds.common.BaseDataSource");
-//                        config.addDataSourceProperty("URLx", "jdbc:mysql://localhost:3306/db");
-//                        //config.setJdbcUrl("jdbc:postgresql://localhost:5444/myschema?user=myschema&password=myschema&currentSchema=myschema");
-//                    })
-//                    .bindInstance(HikariConfig.class, getHikariConfig())
-                ))
+                            .moduleConfig(ApplicationModule.class, bindings.getServerConfig().get("/user", ApplicationModule.Config.class))
+                            .moduleConfig(HikariModule.class, getHikariConfig())
+                            .module(JooqModule.class)
+                            .bindInstance(ClientErrorHandler.class, new CustomErrorHandler())
+            ))
             .handlers(chain -> chain
 //                .all(ctx -> {
 //                    logger.info("ALL handler");
@@ -71,7 +72,14 @@ public class Application {
                 .get(ctx -> ctx.render("Welcome to Rat pack!!!"))
                 //.get("employees", ctx -> ctx.render(Jackson.json(employees)))
                 .get("config", ctx -> ctx.render(Jackson.json(ctx.get(DatabaseConfig.class))))
-                .get("foo", ctx -> ctx.render("Foo"))
+                .get("foo", ctx -> {
+                    final DSLContext dsl = ctx.get(DSLContext.class);
+                    final Result<Record> result = dsl.select().from(org.superbiz.model.jooq.tables.Employee.EMPLOYEE).fetch();
+                    for (Record record : result) {
+                        logger.info(record.toString());
+                    }
+                    ctx.render("Foo");
+                })
                 .get("foo/:id", ctx -> ctx.render("Foo " + ctx.getPathTokens().get("id")))
                 .path("paa", p -> p.byMethod(action ->
                     action.get(ctx -> ctx.render("paa GET"))
@@ -83,12 +91,21 @@ public class Application {
                     ctx.render("User service says " + userService.getUsername());
                 })
                 .prefix("poo", action -> action.get(ctx -> ctx.render("poo GET " + ctx.getRequest().getQueryParams())))
+                .all(ctx -> {
+                    final String file = ctx.getRequest().getQueryParams().get("file");
+                    if (file != null) {
+//                        final Path path = ctx.file("static/" + file);
+//                        FileRenderer.NON_CACHING.render(ctx, path);
+                        ctx.render(ctx.file("static/" + file));
+                    } else {
+                        ctx.next();
+                    }
+                })
         ));
     }
 
 //    // https://github.com/ratpack/ratpack/issues/1270
 //    private static HikariConfig makeHikariConfig(Properties properties) {
-//        logger.info(String.format("Properties: %s", properties));
 //        return new HikariConfig(properties);
 //    }
 
@@ -104,11 +121,4 @@ public class Application {
         config.setJdbcUrl(url);
         return config;
     }
-
-
-//    public static HikariConfig getHikariConfig() {
-//        HikariConfig hikariConfig = new HikariConfig();
-//        hikariConfig.setJdbcUrl(System.getenv("DATABASE_URL"));
-//        return hikariConfig;
-//    }
 }

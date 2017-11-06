@@ -19,6 +19,37 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq-codegen-maven</artifactId>
+                <version>3.10.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <jdbc>
+                        <driver>org.postgresql.Driver</driver>
+                        <!--<url><![CDATA[jdbc:postgresql://localhost:5444/dbname?user=username&password=pwd]]></url>-->
+                        <url>${env.JDBC_DATABASE_URL}</url>
+                    </jdbc>
+                    <generator>
+                        <database>
+                            <name>org.jooq.util.postgres.PostgresDatabase</name>
+                            <includes>.*</includes>
+                            <excludes></excludes>
+                            <inputSchema>dbo</inputSchema>
+                        </database>
+                        <target>
+                            <packageName>org.superbiz.model.jooq</packageName>
+                            <directory>src/main/java</directory>
+                        </target>
+                    </generator>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>3.1.0</version>
@@ -34,7 +65,7 @@
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <manifestEntries>
                                         <Main-Class>org.superbiz.Application</Main-Class>
-                                        <Build-Number>123</Build-Number>
+                                        <!--<Build-Number>123</Build-Number>-->
                                     </manifestEntries>
                                 </transformer>
                             </transformers>
@@ -66,6 +97,21 @@
             <artifactId>slf4j-jdk14</artifactId>
             <version>1.7.25</version>
         </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq</artifactId>
+            <version>3.10.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq-meta</artifactId>
+            <version>3.10.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq-codegen</artifactId>
+            <version>3.10.0</version>
+        </dependency>
 
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -80,5 +126,62 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>jooq-gen</id>
+            <!--<activation>-->
+                <!--<property>-->
+                    <!--<name>env</name>-->
+                    <!--<value>dev</value>-->
+                <!--</property>-->
+            <!--</activation>-->
+            <!--<properties>-->
+                <!--<appserver.home>/path/to/dev/appserver</appserver.home>-->
+            <!--</properties>-->
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jooq</groupId>
+                        <artifactId>jooq-codegen-maven</artifactId>
+                        <version>3.10.0</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>generate</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <jdbc>
+                                <driver>org.postgresql.Driver</driver>
+                                <!--<url><![CDATA[jdbc:postgresql://localhost:5444/dbname?user=username&password=pwd]]></url>-->
+                                <url>${env.JDBC_DATABASE_URL}</url>
+                            </jdbc>
+                            <generator>
+                                <database>
+                                    <name>org.jooq.util.postgres.PostgresDatabase</name>
+                                    <includes>.*</includes>
+                                    <excludes></excludes>
+                                    <inputSchema>dbo</inputSchema>
+                                </database>
+                                <target>
+                                    <packageName>org.superbiz.model.jooq</packageName>
+                                    <directory>src/main/java</directory>
+                                </target>
+                            </generator>
+                            <!-- -Dorg.jooq.no-logo=true-->
+                            <!--<systemProperties>-->
+                                <!--<systemProperty>-->
+                                    <!--<key>org.jooq.no-logo</key>-->
+                                    <!--<value>true</value>-->
+                                <!--</systemProperty>-->
+                            <!--</systemProperties>-->
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
 

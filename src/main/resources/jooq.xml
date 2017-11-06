@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration xmlns="http://www.jooq.org/xsd/jooq-codegen-3.10.0.xsd">
+    <!--<jdbc>-->
+        <!--<driver>org.postgresql.Driver</driver>-->
+        <!--<url>${env.JDBC_DATABASE_URL}</url>-->
+    <!--</jdbc>-->
+    <generator>
+        <name>org.jooq.util.JavaGenerator</name>
+        <!--<database>-->
+            <!--<name>org.jooq.util.postgres.PostgresDatabase</name>-->
+            <!--<inputSchema>dbo</inputSchema>-->
+            <!--<includes>.*</includes>-->
+            <!--<excludes></excludes>-->
+        <!--</database>-->
+        <database>
+            <name>org.jooq.util.ddl.DDLDatabase</name>
+            <properties>
+                <property>
+                    <key>scripts</key>
+                    <value>src/main/resources/database.sql</value>
+                </property>
+            </properties>
+        </database>
+        <target>
+            <packageName>org.superbiz.model.jooq</packageName>
+            <directory>src/main/java</directory>
+        </target>
+    </generator>
+</configuration>
