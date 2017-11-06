@@ -1,8 +1,6 @@
-- config
-- db connection
-  https://ratpack.io/manual/current/api/ratpack/hikari/HikariModule.html
-  http://mrhaki.blogspot.de/2015/11/ratpacked-using-postgresql-database.html
-- filter
+- INFO org.jooq.tools.JooqLogger info - vyhodit
+- cteni vsech employees do JSONu
+- node stuff -> static resources
 
 - https://danhyun.github.io/2016-jeeconf-rapid-ratpack-java/
 - https://github.com/danhyun/modern-java-web/blob/master/src/main/java/App.java
