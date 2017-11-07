@@ -2,9 +2,12 @@ package org.superbiz.config;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
+import com.google.inject.Scopes;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import org.jooq.impl.DefaultConfiguration;
+import org.superbiz.service.EmployeeRepository;
+import org.superbiz.service.EmployeeRepositoryImpl;
 
 import javax.inject.Singleton;
 import javax.sql.DataSource;
@@ -12,7 +15,7 @@ import javax.sql.DataSource;
 public class JooqModule extends AbstractModule {
     @Override
     protected void configure() {
-        //bind(MeetingRepository.class).to(DefaultMeetingRepository.class).in(Scopes.SINGLETON);
+        bind(EmployeeRepository.class).to(EmployeeRepositoryImpl.class).in(Scopes.SINGLETON);
     }
 
     @Provides

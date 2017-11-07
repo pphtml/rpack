@@ -1,15 +1,13 @@
 package org.superbiz;
 
-import com.google.common.collect.Lists;
 import com.zaxxer.hikari.HikariConfig;
 import org.jooq.DSLContext;
-import org.jooq.Record;
-import org.jooq.Result;
 import org.superbiz.config.ApplicationModule;
 import org.superbiz.config.JooqModule;
+import org.superbiz.model.Employee;
+import org.superbiz.service.EmployeeChainAction;
 import org.superbiz.service.UserService;
 import org.superbiz.utils.CustomErrorHandler;
-import org.superbiz.utils.HerokuUtils;
 import ratpack.error.ClientErrorHandler;
 import ratpack.guice.Guice;
 import ratpack.hikari.HikariModule;
@@ -17,14 +15,13 @@ import ratpack.jackson.Jackson;
 import ratpack.server.RatpackServer;
 
 import javax.sql.DataSource;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 import java.util.logging.Logger;
 
 public class Application {
     static {
         System.setProperty("java.util.logging.config.class", LoggingConfig.class.getName());
+        System.setProperty("org.jooq.no-logo", "true");
     }
 
     private static final Logger logger = Logger.getLogger(Application.class.getName());
@@ -59,10 +56,11 @@ public class Application {
             .registry(Guice.registry(bindings -> bindings
 //                    .bindInstance(UserService.class, new UserServiceImpl())
 //                    .bind(UserDAO.class, UserDAOImpl.class)
-                            .moduleConfig(ApplicationModule.class, bindings.getServerConfig().get("/user", ApplicationModule.Config.class))
-                            .moduleConfig(HikariModule.class, getHikariConfig())
-                            .module(JooqModule.class)
-                            .bindInstance(ClientErrorHandler.class, new CustomErrorHandler())
+                .moduleConfig(ApplicationModule.class, bindings.getServerConfig().get("/user", ApplicationModule.Config.class))
+                .moduleConfig(HikariModule.class, getHikariConfig())
+                .module(JooqModule.class)
+                .bindInstance(ClientErrorHandler.class, new CustomErrorHandler())
+                .bind(EmployeeChainAction.class)
             ))
             .handlers(chain -> chain
 //                .all(ctx -> {
@@ -74,11 +72,9 @@ public class Application {
                 .get("config", ctx -> ctx.render(Jackson.json(ctx.get(DatabaseConfig.class))))
                 .get("foo", ctx -> {
                     final DSLContext dsl = ctx.get(DSLContext.class);
-                    final Result<Record> result = dsl.select().from(org.superbiz.model.jooq.tables.Employee.EMPLOYEE).fetch();
-                    for (Record record : result) {
-                        logger.info(record.toString());
-                    }
-                    ctx.render("Foo");
+                    List<Employee> result = dsl.select().from(org.superbiz.model.jooq.tables.Employee.EMPLOYEE)
+                            .fetchInto(Employee.class);
+                    ctx.render(Jackson.json(result));
                 })
                 .get("foo/:id", ctx -> ctx.render("Foo " + ctx.getPathTokens().get("id")))
                 .path("paa", p -> p.byMethod(action ->
@@ -91,6 +87,7 @@ public class Application {
                     ctx.render("User service says " + userService.getUsername());
                 })
                 .prefix("poo", action -> action.get(ctx -> ctx.render("poo GET " + ctx.getRequest().getQueryParams())))
+                .prefix("employee", EmployeeChainAction.class)
                 .all(ctx -> {
                     final String file = ctx.getRequest().getQueryParams().get("file");
                     if (file != null) {
@@ -103,11 +100,6 @@ public class Application {
                 })
         ));
     }
-
-//    // https://github.com/ratpack/ratpack/issues/1270
-//    private static HikariConfig makeHikariConfig(Properties properties) {
-//        return new HikariConfig(properties);
-//    }
 
     private static HikariConfig getHikariConfig() {
         String url = System.getProperty("JDBC_DATABASE_URL");

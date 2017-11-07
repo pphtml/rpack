@@ -4,9 +4,14 @@ import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import org.superbiz.dao.UserDAO;
 import org.superbiz.dao.UserDAOImpl;
+import org.superbiz.service.EmployeeRepository;
+import org.superbiz.service.EmployeeService;
+import org.superbiz.service.EmployeeServiceImpl;
 import org.superbiz.service.UserService;
 import org.superbiz.service.UserServiceImpl;
 import ratpack.guice.ConfigurableModule;
+
+import javax.inject.Singleton;
 
 public class ApplicationModule extends ConfigurableModule<ApplicationModule.Config> {
     public static class Config {
@@ -39,4 +44,11 @@ public class ApplicationModule extends ConfigurableModule<ApplicationModule.Conf
     UserService userService(UserDAO userDAO, Config config) {
         return new UserServiceImpl(userDAO, config);
     }
+
+    @Provides
+    @Singleton
+    public EmployeeService employeeService(EmployeeRepository employeeRepository) {
+        return new EmployeeServiceImpl(employeeRepository);
+    }
+
 }
