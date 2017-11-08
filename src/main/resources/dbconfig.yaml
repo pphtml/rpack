@@ -1,4 +1,0 @@
-database:
-  jdbcUrl: "jdbc:postgresql://localhost:5432/abc?user=abc&password=abc&currentSchema=abc"
-user:
-  nodeName: "Pepik"

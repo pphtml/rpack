@@ -1,8 +1,7 @@
-- DSLContext - close?
+- injectable logger?
 - propis build.js do target
   - cache ?
 - dev deployment
-- code cleanup
 - otestovat pruchodnost pri zablokovani vlakna
   - http://www.naleid.com/2016/05/01/ratpack-executions-async-plus-serial-not-parallel.html
   - regex service blocking
@@ -12,5 +11,6 @@
 - https://danhyun.github.io/2016-jeeconf-rapid-ratpack-java/
 - https://github.com/danhyun/modern-java-web/blob/master/src/main/java/App.java
 - https://github.com/pac4j/ratpack-pac4j-demo/blob/master/src/main/java/org/pac4j/demo/ratpack/RatpackPac4jDemo.java
+- promazani node sources - Compressing... Done: 61.1M -> 92.7,  rozdil ~30M
 
 JDBC_DATABASE_URL="$JDBC_RP" mvn clean install -Dorg.jooq.no-logo=true

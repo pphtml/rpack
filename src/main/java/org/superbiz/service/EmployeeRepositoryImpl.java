@@ -36,10 +36,10 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
   @Override
   public Promise<List<Employee>> getEmployees() {
     return Blocking.get(() ->
-            context
-                    .select()
-                    .from(org.superbiz.model.jooq.tables.Employee.EMPLOYEE)
-                    .fetchInto(Employee.class)
+        context
+            .select()
+            .from(org.superbiz.model.jooq.tables.Employee.EMPLOYEE)
+            .fetchInto(Employee.class)
     );
   }
 }
