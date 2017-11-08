@@ -5,10 +5,15 @@ import org.jooq.DSLContext;
 import org.superbiz.config.ApplicationModule;
 import org.superbiz.config.JooqModule;
 import org.superbiz.model.Employee;
+import org.superbiz.service.ApiChainAction;
 import org.superbiz.service.EmployeeChainAction;
 import org.superbiz.service.UserService;
 import org.superbiz.utils.CustomErrorHandler;
+import org.superbiz.utils.WebpackProcess;
 import ratpack.error.ClientErrorHandler;
+import ratpack.exec.Blocking;
+import ratpack.exec.Execution;
+import ratpack.exec.Promise;
 import ratpack.guice.Guice;
 import ratpack.hikari.HikariModule;
 import ratpack.jackson.Jackson;
@@ -38,6 +43,7 @@ public class Application {
 //                    })))
             //.registryOf(r -> r.add(UserService.class, new UserServiceImpl()))
             .serverConfig(config -> { config
+                .threads(8)
                 //j.json(Paths.get("dbconfig.json")).require("/database", DatabaseConfig.class);
                 //j.json(Application.class.getClassLoader().getResource("dbconfig.json")).require("/database", DatabaseConfig.class);
                 .findBaseDir()
@@ -61,14 +67,48 @@ public class Application {
                 .module(JooqModule.class)
                 .bindInstance(ClientErrorHandler.class, new CustomErrorHandler())
                 .bind(EmployeeChainAction.class)
+                .bind(ApiChainAction.class)
             ))
             .handlers(chain -> chain
 //                .all(ctx -> {
 //                    logger.info("ALL handler");
 //                    ctx.next();
 //                })
-                .get(ctx -> ctx.render("Welcome to Rat pack!!!"))
+                //.get(ctx -> ctx.render("Welcome to Rat pack!!!"))
                 //.get("employees", ctx -> ctx.render(Jackson.json(employees)))
+//                .get("block", ctx -> {
+//                    logger.info(String.format("A. Original compute thread: %s", Thread.currentThread().getName()));
+//                    Blocking.exec(() -> {
+//                        logger.info(String.format("B. Promise compute thread: %s", Thread.currentThread().getName()));
+//                        Thread.sleep(15000);
+//                        ctx.render("abc");
+//                    });
+//                    logger.info(String.format("C. Original compute thread: %s", Thread.currentThread().getName()));
+//                })
+//                .get("block", ctx -> {
+//                    logger.info(String.format("A. Original compute thread: %s", Thread.currentThread().getName()));
+//                    Promise.async(downstream -> {
+//                        logger.info(String.format("B. Promise compute thread: %s", Thread.currentThread().getName()));
+//                        Thread.sleep(15000);
+//                        downstream.success("hello from async promise");
+//                    }).then(result -> {
+//                        ctx.render(result);
+//                    });
+//                    logger.info(String.format("C. Original compute thread: %s", Thread.currentThread().getName()));
+//                })
+//                .get("block", ctx -> {
+//                    logger.info(String.format("A. Original compute thread: %s", Thread.currentThread().getName()));
+//                    Promise.async(downstream -> {
+////                        Execution.fork().start(forkedExec -> {
+//                            logger.info(String.format("B. Promise compute thread: %s", Thread.currentThread().getName()));
+//                            Thread.sleep(15000);
+//                            downstream.success("hello from async promise");
+////                        });
+//                    }).fork().then(result -> {
+//                        ctx.render(result);
+//                    });
+//                    logger.info(String.format("C. Original compute thread: %s", Thread.currentThread().getName()));
+//                })
                 .get("config", ctx -> ctx.render(Jackson.json(ctx.get(DatabaseConfig.class))))
                 .get("foo", ctx -> {
                     final DSLContext dsl = ctx.get(DSLContext.class);
@@ -88,17 +128,17 @@ public class Application {
                 })
                 .prefix("poo", action -> action.get(ctx -> ctx.render("poo GET " + ctx.getRequest().getQueryParams())))
                 .prefix("employee", EmployeeChainAction.class)
+                .prefix("api", ApiChainAction.class)
+                .files(f -> f.dir("static"))
                 .all(ctx -> {
-                    final String file = ctx.getRequest().getQueryParams().get("file");
-                    if (file != null) {
-//                        final Path path = ctx.file("static/" + file);
-//                        FileRenderer.NON_CACHING.render(ctx, path);
-                        ctx.render(ctx.file("static/" + file));
-                    } else {
-                        ctx.next();
-                    }
+                    ctx.render(ctx.file("static/index.html"));
                 })
         ));
+
+//        if (getDevMode()) {
+//            final Runnable task = () -> WebpackProcess.runWebpack();
+//            task.run();
+//        }
     }
 
     private static HikariConfig getHikariConfig() {
@@ -112,5 +152,10 @@ public class Application {
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(url);
         return config;
+    }
+
+    private static boolean getDevMode() {
+        String devMode = System.getProperty("devMode", "true");
+        return "true".equalsIgnoreCase(devMode);
     }
 }

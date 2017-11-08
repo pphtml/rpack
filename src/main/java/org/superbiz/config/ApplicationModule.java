@@ -7,6 +7,10 @@ import org.superbiz.dao.UserDAOImpl;
 import org.superbiz.service.EmployeeRepository;
 import org.superbiz.service.EmployeeService;
 import org.superbiz.service.EmployeeServiceImpl;
+import org.superbiz.service.RegexService;
+import org.superbiz.service.RegexServiceImpl;
+import org.superbiz.service.TaskExecutor;
+import org.superbiz.service.TaskExecutorImpl;
 import org.superbiz.service.UserService;
 import org.superbiz.service.UserServiceImpl;
 import ratpack.guice.ConfigurableModule;
@@ -37,6 +41,8 @@ public class ApplicationModule extends ConfigurableModule<ApplicationModule.Conf
     @Override
     protected void configure() {
         bind(UserDAO.class).to(UserDAOImpl.class).in(Scopes.SINGLETON);
+        bind(RegexService.class).to(RegexServiceImpl.class).in(Scopes.SINGLETON);
+        bind(TaskExecutor.class).to(TaskExecutorImpl.class).in(Scopes.SINGLETON);
         // bind(UserService.class).to(UserServiceImpl.class).asEagerSingleton();
     }
 
