@@ -1,8 +1,12 @@
 package org.superbiz.service;
 
+import org.superbiz.model.Employee;
 import ratpack.func.Action;
 import ratpack.handling.Chain;
 import ratpack.jackson.Jackson;
+import ratpack.rx.RxRatpack;
+import ratpack.stream.TransformablePublisher;
+import rx.Observable;
 
 public class EmployeeChainAction implements Action<Chain> {
     @Override
@@ -24,7 +28,20 @@ public class EmployeeChainAction implements Action<Chain> {
 //                                .then(ctx::render)
 //                        )
                     );
-            });
+            }).get("publ", ctx -> {
+                EmployeeServicePublisher service = ctx.get(EmployeeServicePublisher.class);
+                TransformablePublisher<Employee> employees = service.getEmployees();
+                employees
+                        .filter(employee -> employee.getName().startsWith("P"))
+                        .bindExec()
+                        .toList()
+                        .map(Jackson::json)
+                        .then(ctx::render);
+            }).get("rx", ctx -> {
+                EmployeeServiceRx service = ctx.get(EmployeeServiceRx.class);
+                final Observable<Employee> employees = service.getEmployees();
+                RxRatpack.promise(employees).then(users -> ctx.render(Jackson.json(users)));
+        });
 //            .get(":id:\\d+/rate/:rating:[1-5]", ctx -> {
 //                EmployeeService service = ctx.get(EmployeeService.class);
 //                PathTokens pathTokens = ctx.getPathTokens();

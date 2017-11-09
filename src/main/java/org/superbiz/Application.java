@@ -1,10 +1,8 @@
 package org.superbiz;
 
 import com.zaxxer.hikari.HikariConfig;
-import org.jooq.DSLContext;
 import org.superbiz.config.ApplicationModule;
 import org.superbiz.config.JooqModule;
-import org.superbiz.model.Employee;
 import org.superbiz.service.ApiChainAction;
 import org.superbiz.service.EmployeeChainAction;
 import org.superbiz.utils.CustomErrorHandler;
@@ -12,11 +10,11 @@ import org.superbiz.utils.WebpackProcess;
 import ratpack.error.ClientErrorHandler;
 import ratpack.guice.Guice;
 import ratpack.hikari.HikariModule;
-import ratpack.jackson.Jackson;
+import ratpack.rx.RxRatpack;
 import ratpack.server.RatpackServer;
+import ratpack.service.Service;
+import ratpack.service.StartEvent;
 
-import javax.sql.DataSource;
-import java.util.List;
 import java.util.logging.Logger;
 
 public class Application {
@@ -39,6 +37,12 @@ public class Application {
                 .bindInstance(ClientErrorHandler.class, new CustomErrorHandler())
                 .bind(EmployeeChainAction.class)
                 .bind(ApiChainAction.class)
+                .bindInstance(new Service() {
+                    @Override
+                    public void onStart(StartEvent event) throws Exception {
+                        RxRatpack.initialize();
+                    }
+                })
             ))
             .handlers(chain -> chain
                 .get("foo/:id", ctx -> ctx.render("Foo " + ctx.getPathTokens().get("id")))

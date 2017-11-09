@@ -2,7 +2,13 @@ package org.superbiz.config;
 
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
-import org.superbiz.service.*;
+import org.superbiz.service.EmployeeRepository;
+import org.superbiz.service.EmployeeService;
+import org.superbiz.service.EmployeeServiceImpl;
+import org.superbiz.service.RegexService;
+import org.superbiz.service.RegexServiceImpl;
+import org.superbiz.service.TaskExecutor;
+import org.superbiz.service.TaskExecutorImpl;
 import ratpack.guice.ConfigurableModule;
 
 import javax.inject.Singleton;
@@ -39,5 +45,4 @@ public class ApplicationModule extends ConfigurableModule<ApplicationModule.Conf
     public EmployeeService employeeService(EmployeeRepository employeeRepository) {
         return new EmployeeServiceImpl(employeeRepository);
     }
-
 }

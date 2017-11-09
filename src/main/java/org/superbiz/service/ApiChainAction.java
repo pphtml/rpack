@@ -1,6 +1,5 @@
 package org.superbiz.service;
 
-import org.superbiz.Application;
 import org.superbiz.vo.Response;
 import org.superbiz.vo.TextMatchResult;
 import ratpack.exec.Blocking;
@@ -9,10 +8,12 @@ import ratpack.func.Action;
 import ratpack.handling.Chain;
 import ratpack.jackson.Jackson;
 
+import javax.inject.Inject;
 import java.util.logging.Logger;
 
 public class ApiChainAction implements Action<Chain> {
-    private static final Logger logger = Logger.getLogger(Application.class.getName());
+    @Inject
+    Logger logger;
 
     @Override
     public void execute(Chain chain) throws Exception {
