@@ -14,6 +14,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <version.postgresql>42.1.4</version.postgresql>
+        <version.ratpack>1.5.0</version.ratpack>
     </properties>
 
     <build>
@@ -135,22 +136,27 @@
         <dependency>
             <groupId>io.ratpack</groupId>
             <artifactId>ratpack-core</artifactId>
-            <version>1.5.0</version>
+            <version>${version.ratpack}</version>
         </dependency>
         <dependency>
             <groupId>io.ratpack</groupId>
             <artifactId>ratpack-test</artifactId>
-            <version>1.5.0</version>
+            <version>${version.ratpack}</version>
         </dependency>
         <dependency>
             <groupId>io.ratpack</groupId>
             <artifactId>ratpack-hikari</artifactId>
-            <version>1.5.0</version>
+            <version>${version.ratpack}</version>
         </dependency>
         <dependency>
             <groupId>io.ratpack</groupId>
             <artifactId>ratpack-rx</artifactId>
-            <version>1.5.0</version>
+            <version>${version.ratpack}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.ratpack</groupId>
+            <artifactId>ratpack-session</artifactId>
+            <version>${version.ratpack}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>

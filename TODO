@@ -1,6 +1,10 @@
 - propis build.js do target
   - cache ?
+  - ./src/main/resources/static/dist/build.js -> ./target/classes/static/dist/build.js
+  - cely dist
 - dev deployment
+- webpack process - output condensed to 1 line
+- rxjava - needed?
 - regex service blocking asynchronous
 - otestovat pruchodnost pri zablokovani vlakna
 - error codes
@@ -13,5 +17,6 @@
 - https://github.com/danhyun/modern-java-web/blob/master/src/main/java/App.java
 - https://github.com/pac4j/ratpack-pac4j-demo/blob/master/src/main/java/org/pac4j/demo/ratpack/RatpackPac4jDemo.java
 - promazani node sources - Compressing... Done: 61.1M -> 92.7,  rozdil ~30M
+- https://dzone.com/articles/what-are-reactive-streams-in-java
 
 JDBC_DATABASE_URL="$JDBC_RP" mvn clean install -Dorg.jooq.no-logo=true

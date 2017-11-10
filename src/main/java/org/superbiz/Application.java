@@ -1,6 +1,7 @@
 package org.superbiz;
 
 import com.zaxxer.hikari.HikariConfig;
+import org.superbiz.chain.SessionChainAction;
 import org.superbiz.config.ApplicationModule;
 import org.superbiz.config.JooqModule;
 import org.superbiz.service.ApiChainAction;
@@ -14,7 +15,12 @@ import ratpack.rx.RxRatpack;
 import ratpack.server.RatpackServer;
 import ratpack.service.Service;
 import ratpack.service.StartEvent;
+import ratpack.session.SessionModule;
+import ratpack.session.clientside.ClientSideSessionModule;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.Duration;
 import java.util.logging.Logger;
 
 public class Application {
@@ -26,6 +32,7 @@ public class Application {
     private static final Logger logger = Logger.getLogger(Application.class.getName());
 
     public static void main(String[] args) throws Exception {
+        // Registry.builder().add(FileRenderer.TYPE, FileRenderer.NON_CACHING);
         RatpackServer.start(server -> server
             .serverConfig(config -> config
                 .findBaseDir()
@@ -34,9 +41,21 @@ public class Application {
                 .moduleConfig(ApplicationModule.class, bindings.getServerConfig().get("/user", ApplicationModule.Config.class))
                 .moduleConfig(HikariModule.class, getHikariConfig())
                 .module(JooqModule.class)
+                .module(SessionModule.class, cfg -> cfg.expires(Duration.ofDays(7)).idName("BLE"))
+                .module(ClientSideSessionModule.class, cfg -> {
+                    cfg.setSessionCookieName("rp_session");
+                    cfg.setSecretToken(Double.valueOf(Math.floor(System.currentTimeMillis() / 10000)).toString());
+                    cfg.setSecretKey("fsoiure!#478Fr?$");
+                    cfg.setMacAlgorithm("HmacSHA1");
+                    cfg.setCipherAlgorithm("AES/CBC/PKCS5Padding");
+                    cfg.setMaxSessionCookieSize(1932);
+                    cfg.setMaxInactivityInterval(Duration.ofHours(24));
+                })
                 .bindInstance(ClientErrorHandler.class, new CustomErrorHandler())
+                //.bindInstance(FileRenderer.class, (FileRenderer) FileRenderer.NON_CACHING)
                 .bind(EmployeeChainAction.class)
                 .bind(ApiChainAction.class)
+                .bind(SessionChainAction.class)
                 .bindInstance(new Service() {
                     @Override
                     public void onStart(StartEvent event) throws Exception {
@@ -48,10 +67,20 @@ public class Application {
                 .get("foo/:id", ctx -> ctx.render("Foo " + ctx.getPathTokens().get("id")))
                 .prefix("employee", EmployeeChainAction.class) // clean up
                 .prefix("api", ApiChainAction.class)
-                .files(f -> f.dir("static"))
-                .all(ctx -> {
-                    ctx.render(ctx.file("static/index.html"));
-                })
+                .prefix("session", SessionChainAction.class)
+                .when(false, action -> action
+                        .files(f -> f.dir("static"))
+                        .all(ctx -> ctx.render(ctx.file("static/index.html")))
+                )
+                .when(true, action -> action // mozna cely vyhodit
+                        .all(ctx -> {
+                            final String fileName = ctx.getRequest().getPath();
+                            final Path path = ctx.file("static/" + fileName);
+                            final Path pathOrIndex = !fileName.isEmpty() && Files.exists(path) ? path : ctx.file("static/index.html");
+                            logger.info(String.format("Rendering: %s", pathOrIndex));
+                            //FileRenderer.NON_CACHING.render(ctx, path);
+                            ctx.render(pathOrIndex);
+                        }))
         ));
 
         if (getDevMode()) {
