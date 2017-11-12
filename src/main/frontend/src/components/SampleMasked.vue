@@ -1,5 +1,5 @@
 <template>
-    <div class="mono-font" style="font-size: 16px;" v-html="markedText"></div>
+    <div class="mono-font" v-html="markedText"></div>
 </template>
 
 <script>
@@ -12,6 +12,14 @@
 
 <style scoped>
     div {
+        /*min-height: 5em;*/
         white-space: pre;
+/*        empty-cells: show;
+        overflow: auto;
+        resize: both;*/
+        background-color: red;
+
+        position: absolute;
+        top: 0px;
     }
 </style>

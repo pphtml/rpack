@@ -2,9 +2,12 @@
     <v-app>
         <v-container fluid>
             <regex-regex></regex-regex>
-            <div class="mark-container">
+            <div>
                 <v-flex xs12>
-                    <sample-text></sample-text>
+                    <div style="position: relative;">
+                        <sample-text></sample-text>
+                        <sample-masked></sample-masked>
+                    </div>
                 </v-flex>
                 <!--<sample-masked class="highlights"></sample-masked>-->
             </div>
