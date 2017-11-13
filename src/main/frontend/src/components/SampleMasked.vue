@@ -17,9 +17,9 @@
 /*        empty-cells: show;
         overflow: auto;
         resize: both;*/
-        background-color: red;
-
+        z-index: 1;
         position: absolute;
         top: 0px;
+        width: 100%;
     }
 </style>

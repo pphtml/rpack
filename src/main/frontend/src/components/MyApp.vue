@@ -4,7 +4,8 @@
             <regex-regex></regex-regex>
             <div>
                 <v-flex xs12>
-                    <div style="position: relative;">
+                    <div style="position: relative">
+                        <sample-transparent></sample-transparent>
                         <sample-text></sample-text>
                         <sample-masked></sample-masked>
                     </div>
@@ -20,6 +21,7 @@
     import RegexRegex from './RegexRegex.vue'
     import SampleText from './SampleText.vue'
     import SampleMasked from './SampleMasked.vue'
+    import SampleTransparent from './SampleTransparent.vue'
     import SampleDataGenerator from './SampleDataGenerator.vue'
 
     export default {
@@ -37,7 +39,8 @@
             'regex-regex': RegexRegex,
             'sample-text': SampleText,
             'sample-masked': SampleMasked,
-            'sample-data-generator': SampleDataGenerator
+            'sample-data-generator': SampleDataGenerator,
+            'sample-transparent': SampleTransparent
         }
     }
 </script>

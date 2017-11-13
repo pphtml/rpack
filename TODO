@@ -1,3 +1,6 @@
+- prekryv divu - zneaktivnit jedno pismo
+- firefox posledni <br>
+- firefox okraj contenteditable divu
 - propis build.js do target
   - cache ?
   - ./src/main/resources/static/dist/build.js -> ./target/classes/static/dist/build.js

@@ -15,7 +15,17 @@
 <script>
     import Vuex from 'vuex'
 
+    function plainToHTML(plainText) {
+        return plainText.replace(/ /g, '&nbsp;');
+    }
+
     export default {
+        mounted: function() {
+            var t = this.sampleText;
+            //debugger
+            console.info(t);
+            this.$el.innerHTML = plainToHTML(this.sampleText);
+        },
         computed: Vuex.mapGetters(['sampleText']),
         methods: {
             //...Vuex.mapActions(['updateSampleText']),
@@ -197,9 +207,13 @@
     div {
         min-height: 5em;
         empty-cells: show;
-        background-color: #eee;
+        /*background-color: #eee;*/
         overflow: auto;
         resize: both;
-        background-color: green;
+        background-color: transparent;
+        position: absolute;
+        z-index: 2;
+        top: 0px;
+        width: 100%;
     }
 </style>
