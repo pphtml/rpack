@@ -1,10 +1,9 @@
 - prekryv divu - zneaktivnit jedno pismo
+- pac4j
+    - https://github.com/pac4j/ratpack-pac4j-demo
+    - https://github.com/zedar/ratpack-examples/blob/master/ratpack-pac4j/src/main/java/r/pac4j/Main.java
 - firefox posledni <br>
 - firefox okraj contenteditable divu
-- propis build.js do target
-  - cache ?
-  - ./src/main/resources/static/dist/build.js -> ./target/classes/static/dist/build.js
-  - cely dist
 - dev deployment
 - webpack process - output condensed to 1 line
 - rxjava - needed?

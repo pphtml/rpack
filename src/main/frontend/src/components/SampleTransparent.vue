@@ -12,7 +12,9 @@
 
 <style scoped>
     div {
+        min-height: 5em;
         white-space: pre;
+        color: transparent;
         z-index: -1;
     }
 </style>

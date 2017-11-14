@@ -68,19 +68,19 @@ public class Application {
                 .prefix("employee", EmployeeChainAction.class) // clean up
                 .prefix("api", ApiChainAction.class)
                 .prefix("session", SessionChainAction.class)
-                .when(false, action -> action
+//                .when(false, action -> action
                         .files(f -> f.dir("static"))
                         .all(ctx -> ctx.render(ctx.file("static/index.html")))
-                )
-                .when(true, action -> action // mozna cely vyhodit
-                        .all(ctx -> {
-                            final String fileName = ctx.getRequest().getPath();
-                            final Path path = ctx.file("static/" + fileName);
-                            final Path pathOrIndex = !fileName.isEmpty() && Files.exists(path) ? path : ctx.file("static/index.html");
-                            logger.info(String.format("Rendering: %s", pathOrIndex));
-                            //FileRenderer.NON_CACHING.render(ctx, path);
-                            ctx.render(pathOrIndex);
-                        }))
+//                )
+//                .when(true, action -> action // mozna cely vyhodit
+//                        .all(ctx -> {
+//                            final String fileName = ctx.getRequest().getPath();
+//                            final Path path = ctx.file("static/" + fileName);
+//                            final Path pathOrIndex = !fileName.isEmpty() && Files.exists(path) ? path : ctx.file("static/index.html");
+//                            logger.info(String.format("Rendering: %s", pathOrIndex));
+//                            //FileRenderer.NON_CACHING.render(ctx, path);
+//                            ctx.render(pathOrIndex);
+//                        }))
         ));
 
         if (getDevMode()) {

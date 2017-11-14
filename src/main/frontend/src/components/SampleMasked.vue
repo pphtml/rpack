@@ -14,6 +14,7 @@
     div {
         /*min-height: 5em;*/
         white-space: pre;
+        color: transparent;
 /*        empty-cells: show;
         overflow: auto;
         resize: both;*/

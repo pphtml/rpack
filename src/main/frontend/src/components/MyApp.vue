@@ -53,6 +53,7 @@
     mark {
         border-radius: 2px;
         background-color: #b1d5e5;
+        color: transparent;
     }
 
 /*    .mark-container {
