@@ -18,6 +18,10 @@
 /*        empty-cells: show;
         overflow: auto;
         resize: both;*/
+        empty-cells: show;
+        overflow: auto;
+        resize: both;
+
         z-index: 1;
         position: absolute;
         top: 0px;

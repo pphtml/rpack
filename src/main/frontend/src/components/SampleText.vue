@@ -30,7 +30,8 @@
         methods: {
             //...Vuex.mapActions(['updateSampleText']),
             update: function(event) {
-                let text = event.target.innerText.replace(/\u00a0/g, ' ');
+                //let text = event.target.innerText.replace(/\u00a0/g, ' ');
+                let text = event.target.textContent.replace(/\u00a0/g, ' ');
                 //let unescaped = textFromTarget(event.target);
                 console.info(`@Update ${event.target.innerHTML} -> ${text}#, lenght: ${text.length}`);
                 this.$store.dispatch('updateSampleText', text);
@@ -205,6 +206,7 @@
 
 <style scoped>
     div {
+        white-space: pre;
         min-height: 5em;
         empty-cells: show;
         /*background-color: #eee;*/

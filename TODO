@@ -1,17 +1,16 @@
-- prekryv divu - zneaktivnit jedno pismo
 - pac4j
     - https://github.com/pac4j/ratpack-pac4j-demo
     - https://github.com/zedar/ratpack-examples/blob/master/ratpack-pac4j/src/main/java/r/pac4j/Main.java
 - firefox posledni <br>
 - firefox okraj contenteditable divu
-- dev deployment
-- webpack process - output condensed to 1 line
 - rxjava - needed?
 - regex service blocking asynchronous
 - otestovat pruchodnost pri zablokovani vlakna
 - error codes
-- check content of jar
 - authentizace OAuth?
+- inotify - https://github.com/guard/listen/wiki/Increasing-the-amount-of-inotify-watchers
+- webpack process - output condensed to 1 line - error parsing & log output
+- detekce ukonceni webpack procesu
 
 - https://github.com/zedar/ratpack-examples/tree/master/ratpack-integrationpatterns - asynchronous calls
 - http://www.naleid.com/2016/05/01/ratpack-executions-async-plus-serial-not-parallel.html
@@ -22,3 +21,4 @@
 - https://dzone.com/articles/what-are-reactive-streams-in-java
 
 JDBC_DATABASE_URL="$JDBC_RP" mvn clean install -Dorg.jooq.no-logo=true
+node/node node_modules/webpack/bin/webpack.js --watch

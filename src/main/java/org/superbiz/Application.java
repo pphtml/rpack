@@ -7,6 +7,7 @@ import org.superbiz.config.JooqModule;
 import org.superbiz.service.ApiChainAction;
 import org.superbiz.service.EmployeeChainAction;
 import org.superbiz.utils.CustomErrorHandler;
+import org.superbiz.utils.RxWebpackProcess;
 import org.superbiz.utils.WebpackProcess;
 import ratpack.error.ClientErrorHandler;
 import ratpack.guice.Guice;
@@ -18,8 +19,6 @@ import ratpack.service.StartEvent;
 import ratpack.session.SessionModule;
 import ratpack.session.clientside.ClientSideSessionModule;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.Duration;
 import java.util.logging.Logger;
 
@@ -84,7 +83,9 @@ public class Application {
         ));
 
         if (getDevMode()) {
-            final Runnable task = () -> WebpackProcess.runWebpack();
+
+            final Runnable task = () -> RxWebpackProcess.runWebpack();
+            // final Runnable task = () -> WebpackProcess.runWebpack();
             task.run();
         }
     }
