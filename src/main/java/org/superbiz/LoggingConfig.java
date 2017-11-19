@@ -13,7 +13,6 @@ public class LoggingConfig {
                 logManager.readConfiguration(is);
             }
         } catch (Exception e) {
-            // The runtime won't show stack traces if the exception is thrown
             e.printStackTrace();
         }
     }

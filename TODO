@@ -1,15 +1,29 @@
+- layout
+  - left menu                                                   *webpack logging config
+  - test windows 100% rest height
+  - quick reference
+  - explanation
+  - match detail
+  - code generator
+  - collection
+  - flags
+  - pocet matcu
+- save regex
+  - update
+  - fork
 - pac4j
     - https://github.com/pac4j/ratpack-pac4j-demo
     - https://github.com/zedar/ratpack-examples/blob/master/ratpack-pac4j/src/main/java/r/pac4j/Main.java
+    - https://dzone.com/articles/secure-your-nodejs-website-with-openid-connect
 - firefox posledni <br>
 - firefox okraj contenteditable divu
 - rxjava - needed?
 - regex service blocking asynchronous
+  - https://github.com/zedar/ratpack-examples/tree/master/ratpack-integrationpatterns
 - otestovat pruchodnost pri zablokovani vlakna
 - error codes
 - authentizace OAuth?
 - inotify - https://github.com/guard/listen/wiki/Increasing-the-amount-of-inotify-watchers
-- webpack process - output condensed to 1 line - error parsing & log output
 - detekce ukonceni webpack procesu
 
 - https://github.com/zedar/ratpack-examples/tree/master/ratpack-integrationpatterns - asynchronous calls
@@ -19,6 +33,10 @@
 - https://github.com/pac4j/ratpack-pac4j-demo/blob/master/src/main/java/org/pac4j/demo/ratpack/RatpackPac4jDemo.java
 - promazani node sources - Compressing... Done: 61.1M -> 92.7,  rozdil ~30M
 - https://dzone.com/articles/what-are-reactive-streams-in-java
+- http://regexraptor.net/
+- http://www.regexe.com/
+- https://regex101.com/
+- https://regex101.com/r/yE3tO8/1
 
 JDBC_DATABASE_URL="$JDBC_RP" mvn clean install -Dorg.jooq.no-logo=true
-node/node node_modules/webpack/bin/webpack.js --watch
+node/node node_modules/webpack/bin/webpack.js --watch --color=false

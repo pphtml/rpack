@@ -111,8 +111,7 @@ public class RxWebpackProcess {
                         this.lastUpdateInterval = System.currentTimeMillis();
                         if (lastUpdateText > -1) {
                             if (!emptyBuilder && lastUpdateInterval - lastUpdateText > 75) {
-                                oneLineLog(stringBuilder.toString());
-                                logger.info(String.format("AGGR: %s", stringBuilder.toString()));
+                                log(stringBuilder.toString());
                                 this.stringBuilder = new StringBuilder();
                                 this.emptyBuilder = true;
                             }
@@ -130,17 +129,27 @@ public class RxWebpackProcess {
             };
     }
 
-    private static final Pattern PATTERN = Pattern.compile("Version:\\s*.+ ([0-9\\.]+)\\s*Time:\\s*(\\d+)ms[\\s\\S]*?build\\.js\\s*([0-9\\.]+)\\s*MB");
-    private static void oneLineLog(String webpackChunk) {
+    // Version:\s*.+ ([0-9\.]+)\s*Time:\s*(\d+)ms[\s\S]*?build\.js\s*([0-9\.]+)\s*MB[\s\S]*?($|ERROR[\s\S]*)
+    private static final Pattern PATTERN = Pattern.compile("Version:\\s*.+ ([0-9\\.]+)\\s*" +
+            "Time:\\s*(\\d+)ms[\\s\\S]*?" +
+            "build\\.js\\s*([0-9\\.]+)\\s*MB[\\s\\S]*?" +
+            "($|ERROR[\\s\\S]*)");
+
+    private static void log(final String webpackChunk) {
         if (webpackChunk.indexOf("is watching") != -1) {
-            logger.info("Webpack background process just started");
+            logger.info("Webpack background process started");
         } else {
             final Matcher matcher = PATTERN.matcher(webpackChunk);
             if (matcher.find()) {
-                final String version = matcher.group(1);
+                // final String version = matcher.group(1);
                 final int time = Integer.parseInt(matcher.group(2));
                 final BigDecimal size = new BigDecimal(matcher.group(3));
-                logger.info(String.format("Webpack build: %d ms, %s MB", time, size));
+                final String error = matcher.group(4);
+                if (error == null || error.isEmpty()) {
+                    logger.info(String.format("Webpack build: %d ms, %s MB", time, size));
+                } else {
+                    logger.info(String.format("Webpack build: %d ms, %s MB\n%s", time, size, error));
+                }
             } else {
                 logger.warning(String.format("Unrecognized Webpack text chunk: %s", webpackChunk));
             }
@@ -157,26 +166,50 @@ public class RxWebpackProcess {
                     .map(l -> NodeInterval.of(l));
 
             final Observable<Node> observableCombined = observableText.mergeWith(observableInterval);
-            observableCombined.subscribe(subscriber());
 
             final Process process = new ProcessBuilder()
                     .command("node/node",
                             "node_modules/webpack/bin/webpack.js",
-                            "--watch")
+                            "--watch",
+                            "--color=false")
                     .redirectInput(ProcessBuilder.Redirect.PIPE)
+                    .redirectErrorStream(true)
+                    //.redirectError(ProcessBuilder.Redirect.PIPE)
                     .directory(new File("src/main/frontend"))
                     .start();
-            try (final InputStream stdOut = process.getInputStream();
-                 final InputStreamReader isr = new InputStreamReader(stdOut);
-                 final BufferedReader br = new BufferedReader(isr)) {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    // logger.info(String.format("-> %s", line));
-                    observableText.onNext(NodeText.of(line));
-                }
-            }
 
-        } catch (IOException e) {
+            new Thread(() -> {
+                try (final InputStream stdOut = process.getInputStream();
+                     final InputStreamReader isr = new InputStreamReader(stdOut);
+                     final BufferedReader br = new BufferedReader(isr)) {
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        // logger.info(String.format("-> %s", line));
+                        observableText.onNext(NodeText.of(line));
+                    }
+                } catch (IOException e) {
+                    logger.log(Level.SEVERE, null, e);
+                }
+            }).start();
+
+//            new Thread(() -> {
+//                try (final InputStream stdErr = process.getErrorStream();
+//                     final InputStreamReader isr = new InputStreamReader(stdErr);
+//                     final BufferedReader br = new BufferedReader(isr)) {
+//                    String line;
+//                    while ((line = br.readLine()) != null) {
+//                        logger.info(String.format("STDERR -> %s", line));
+//                        //observableText.onNext(NodeText.of(line));
+//                    }
+//                } catch (IOException e) {
+//                    logger.log(Level.SEVERE, null, e);
+//                }
+//            }).start();
+
+            observableCombined.subscribe(subscriber());
+
+            process.waitFor();
+        } catch (IOException | InterruptedException e) {
             logger.log(Level.SEVERE, "Webpack process stopped", e);
         }
 
