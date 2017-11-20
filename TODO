@@ -25,6 +25,8 @@
 - authentizace OAuth?
 - inotify - https://github.com/guard/listen/wiki/Increasing-the-amount-of-inotify-watchers
 - detekce ukonceni webpack procesu
+- https://github.com/FranckFreiburger/http-vue-loader
+- rekurzivni cteni adresaru
 
 - https://github.com/zedar/ratpack-examples/tree/master/ratpack-integrationpatterns - asynchronous calls
 - http://www.naleid.com/2016/05/01/ratpack-executions-async-plus-serial-not-parallel.html
