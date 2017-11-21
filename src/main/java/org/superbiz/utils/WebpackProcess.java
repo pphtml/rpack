@@ -1,11 +1,17 @@
 package org.superbiz.utils;
 
+import org.superbiz.LoggingConfig;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class WebpackProcess {
+    static {
+        System.setProperty("java.util.logging.config.class", LoggingConfig.class.getName());
+    }
+
     private static final Logger logger = Logger.getLogger(WebpackProcess.class.getName());
 
     public static void main(String[] args) throws IOException, InterruptedException {
