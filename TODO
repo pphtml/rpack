@@ -25,7 +25,13 @@
 - error codes
 - authentizace OAuth?
 - inotify - https://github.com/guard/listen/wiki/Increasing-the-amount-of-inotify-watchers
-- https://github.com/FranckFreiburger/http-vue-loader
+- https://github.com/FranckFreiburger/http-vue-loader & vuetify
+- https://www.amazon.co.uk/RxJS-Action-Paul-P-Daniels/dp/1617293415
+
+
+- https://toddmotto.com/rxjs-observables-observers-operators
+- https://www.learnrxjs.io/
+- https://xgrommx.github.io/rx-book/content/guidelines/index.html
 
 - https://github.com/zedar/ratpack-examples/tree/master/ratpack-integrationpatterns - asynchronous calls
 - http://www.naleid.com/2016/05/01/ratpack-executions-async-plus-serial-not-parallel.html
