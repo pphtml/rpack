@@ -1,6 +1,7 @@
+- standard IDEA mapping
 - heroku ps -a <app name>
 - layout
-  - left menu                                                   *webpack logging config
+  - left menu
   - test windows 100% rest height
   - quick reference
   - explanation
@@ -27,7 +28,7 @@
 - inotify - https://github.com/guard/listen/wiki/Increasing-the-amount-of-inotify-watchers
 - https://github.com/FranckFreiburger/http-vue-loader & vuetify
 - https://www.amazon.co.uk/RxJS-Action-Paul-P-Daniels/dp/1617293415
-
+- https://github.com/danveloper/ratpack-rx-websockets
 
 - https://toddmotto.com/rxjs-observables-observers-operators
 - https://www.learnrxjs.io/

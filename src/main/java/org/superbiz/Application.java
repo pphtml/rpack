@@ -83,7 +83,6 @@ public class Application {
         ));
 
         if (getDevMode()) {
-
             final Runnable task = () -> RxWebpackProcess.runWebpack();
             // final Runnable task = () -> WebpackProcess.copyResources();
             task.run();
