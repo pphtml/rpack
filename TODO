@@ -1,4 +1,12 @@
 - standard IDEA mapping
+- otestovat WebSocket na heroku
+  - https://github.com/ohjames/rxjs-websockets
+- Geo Index:
+  - https://github.com/davidmoten/rtree
+  - https://github.com/locationtech/spatial4j
+  - https://github.com/jchambers/jeospatial
+
+- kompilace do es6tky
 - heroku ps -a <app name>
 - layout
   - left menu

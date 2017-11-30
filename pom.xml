@@ -185,6 +185,17 @@
             <version>${version.postgresql}</version>
         </dependency>
 
+        <!--<dependency>-->
+            <!--<groupId>org.locationtech.spatial4j</groupId>-->
+            <!--<artifactId>spatial4j</artifactId>-->
+            <!--<version>0.6</version>-->
+        <!--</dependency>-->
+        <dependency>
+            <groupId>com.github.davidmoten</groupId>
+            <artifactId>rtree</artifactId>
+            <version>0.8.0.2</version>
+        </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
