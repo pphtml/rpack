@@ -1,3 +1,9 @@
+                let originalUrlChunk = /http(s?:\/\/.*?\/)/g.exec(window.location.href)[1];
+                let wsUrl = `ws${originalUrlChunk}chat?client=${client}`;
+                websocket = new WebSocket(wsUrl);
+
+- https://github.com/gregwhitaker/ratpack-websockets-example
+- https://addyosmani.com/resources/essentialjsdesignpatterns/book/
 - standard IDEA mapping
 - otestovat WebSocket na heroku
   - https://github.com/ohjames/rxjs-websockets
@@ -41,6 +47,7 @@
 - https://toddmotto.com/rxjs-observables-observers-operators
 - https://www.learnrxjs.io/
 - https://xgrommx.github.io/rx-book/content/guidelines/index.html
+- ES6: http://exploringjs.com/es6/ch_classes.html
 
 - https://github.com/zedar/ratpack-examples/tree/master/ratpack-integrationpatterns - asynchronous calls
 - http://www.naleid.com/2016/05/01/ratpack-executions-async-plus-serial-not-parallel.html
