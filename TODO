@@ -1,7 +1,3 @@
-                let originalUrlChunk = /http(s?:\/\/.*?\/)/g.exec(window.location.href)[1];
-                let wsUrl = `ws${originalUrlChunk}chat?client=${client}`;
-                websocket = new WebSocket(wsUrl);
-
 - https://github.com/gregwhitaker/ratpack-websockets-example
 - https://addyosmani.com/resources/essentialjsdesignpatterns/book/
 - standard IDEA mapping
