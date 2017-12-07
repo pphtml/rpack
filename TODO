@@ -1,3 +1,20 @@
+- https://www.gitbook.com/book/btroncone/learn-rxjs/details
+
+- .throttleTime vs .debounce vs .throttle
+- Rx.Observable.merge(source.debounceTime(500),source.throttleTime(500)).subscribe(console.info);
+- Rx.Observable.interval(300).timeInterval().take(15).bufferTime(1000).subscribe(i => console.log(i));
+var subject = new Rx.Subject();
+subject.next('a');
+subject.bufferTime(10000).subscribe(i => console.log(`count: ${i.length}`));
+var subject = new Rx.Subject();
+subject.next('a');
+subject.bufferTime(10000).subscribe(i => console.log(`count: ${i.length}`));
+- https://www.gitbook.com/book/btroncone/learn-rxjs/details
+- https://www.devbridge.com/articles/dependency-injection-in-javascript/
+- https://www.google.com/imgres?imgurl=https%3A%2F%2Fus.123rf.com%2F450wm%2Fpriisk%2Fpriisk1301%2Fpriisk130100005%2F17231039-sketch-head-of-the-snake-illustration.jpg%3Fver%3D6&imgrefurl=https%3A%2F%2Fwww.123rf.com%2Fphoto_3845202_angry-snake--isolated-on-white.html&docid=NFr4GnGhuDkE2M&tbnid=_AnW5rm215VFzM%3A&vet=10ahUKEwigx5fs7_fXAhWPzaQKHZ3uDGU4yAEQMwhOKEswSw..i&w=450&h=450&bih=856&biw=1386&q=snake%20head&ved=0ahUKEwigx5fs7_fXAhWPzaQKHZ3uDGU4yAEQMwhOKEswSw&iact=mrc&uact=8
+- https://www.google.com/imgres?imgurl=http%3A%2F%2Fhddfhm.com%2Fimages%2Fclipart-heads-9.jpg&imgrefurl=http%3A%2F%2Fhddfhm.com%2Fclip-art%2Fheads-clipart.html&docid=jy80KqipvQ6voM&tbnid=QofLvtUfb4EypM%3A&vet=10ahUKEwjbyb_17_fXAhWB-qQKHTjmCdU4rAIQMwg0KDIwMg..i&w=400&h=385&bih=856&biw=1386&q=snake%20head&ved=0ahUKEwjbyb_17_fXAhWB-qQKHTjmCdU4rAIQMwg0KDIwMg&iact=mrc&uact=8
+- https://www.google.com/imgres?imgurl=https%3A%2F%2Fd30y9cdsu7xlg0.cloudfront.net%2Fpng%2F1110135-200.png&imgrefurl=https%3A%2F%2Fthenounproject.com%2Fterm%2Fcobra%2F413978%2F&docid=2j9K9crD90usQM&tbnid=IiLAO01snRszbM%3A&vet=10ahUKEwjxoJKP8PfXAhXECOwKHTQHB6U4kAMQMwgQKA4wDg..i&w=200&h=200&bih=856&biw=1386&q=snake%20head&ved=0ahUKEwjxoJKP8PfXAhXECOwKHTQHB6U4kAMQMwgQKA4wDg&iact=mrc&uact=8
+
 - https://github.com/gregwhitaker/ratpack-websockets-example
 - https://addyosmani.com/resources/essentialjsdesignpatterns/book/
 - standard IDEA mapping
